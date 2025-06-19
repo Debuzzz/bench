@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -O3 -Wall -Wextra
-TARGET = bin/main
+TARGET = bin/mmul_bench
 SRC = main.c
 
 .PHONY: all clean
