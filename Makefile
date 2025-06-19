@@ -15,5 +15,3 @@ $(TARGET): $(SRC) | bin
 
 clean:
 	rm -rf bin
-	deactivate || true
-	rm -rf .venv
