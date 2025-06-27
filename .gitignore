@@ -1,2 +1,8 @@
 .venv
 .vscode
+prerequis
+bin
+data
+
+rapport.*
+!rapport.tex

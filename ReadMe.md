@@ -1,28 +1,94 @@
-# MMUL
+# MMUL — Benchmark de multiplication de matrices
 
-MMUL calcule la multiplication de deux matrices aléatoires de taille $N \times N$.
+Ce projet permet de mesurer l'impact du cache sur la multiplication de matrices en C, d'automatiser les benchmarks, de générer des graphiques et de compiler un rapport scientifique, le tout de façon reproductible grâce à Docker.
 
-## Utilisation
+---
+
+## Structure du projet
+
+- `main.c` : code source C des différents algorithmes de multiplication de matrices
+- `bin/` : dossier des exécutables compilés
+- `data/` : résultats bruts (CSV, images)
+- `notebook.ipynb` : notebook Python pour l'automatisation, l'analyse et la génération des graphiques
+- `latex/rapport.tex` : rapport scientifique LaTeX
+- `Dockerfile` : environnement reproductible (Python, Jupyter, LaTeX)
+- `Makefile` : automatisation de toutes les étapes (compilation, exécution, analyse, rapport)
+- `requirements.txt` : dépendances Python (pandas, plotnine, etc.)
+
+---
+
+## Prérequis
+
+- [Docker](https://www.docker.com/) installé
+- (Optionnel) `make` installé pour lancer toutes les étapes en une commande
+
+---
+
+## Utilisation rapide
+
+### 1. Tout exécuter automatiquement
+
+À la racine du projet, lance :
 
 ```bash
-mmul_bench N <ALGORITHMS>
+make
 ```
 
-**N :** est la taille de la matrice
+Cela va :
+- Construire l'image Docker avec tous les outils nécessaires
+- Compiler le binaire C
+- Exécuter le notebook Python (génère les résultats et les graphiques)
+- Compiler le rapport LaTeX (PDF dans `latex/`)
 
-**<ALGORITHMS> :** est le nom des "algortihmes" utilisées, c'est à dire le nom l'ordre de parcours des indices dans la multiplication. Les différents parcours possibles sont : `ijk`, `jik`, `kij`, `ikj`, `jki` et `kji`.
+### 2. Utilisation manuelle
 
-Le résultat de la fonction est, pour chaque "algorithme", la dernière valeur de la matrice suivi du temps de calcul en micro seconds $(\mu s)$. Si aucun algorithme est fourni, le calcul est effectué sur toutes les combinaisons de $i$, $j$, et $k$ possible. Si une liste est fournie, les résultats affichés sont affichés dans l'ordre `ijk`, `jik`, `kij`, `ikj`, `jki` et `kji`.
-
-Par exemple :
+#### Compilation du binaire
 
 ```bash
-./mmul_bench 24 ijk,kji
+make docker
+make bin/mmul_bench
 ```
 
-Renvoie le résultat :
+#### Lancer les benchmarks et générer les résultats
 
 ```bash
+make notebook
+```
+Cela exécute le notebook dans Docker, génère `data/resultats.csv` et les graphiques.
+
+#### Compiler le rapport
+
+```bash
+make latex
+```
+Cela compile le PDF du rapport dans `latex/`.
+
+#### Nettoyer les fichiers générés
+
+```bash
+make clean
+```
+
+---
+
+## Description du binaire
+
+```bash
+./bin/mmul_bench N <ALGORITHMS>
+```
+
+- **N** : taille de la matrice
+- **<ALGORITHMS>** : ordre des boucles, parmi `ijk`, `jik`, `kij`, `ikj`, `jki`, `kji`
+
+Exemple :
+
+```bash
+./bin/mmul_bench 24 ijk,kji
+```
+
+Affiche :
+
+```txt
 enabling: 'ijk'
 enabling: 'kji'
 501601.342243
@@ -30,14 +96,18 @@ ijk:354809.000000μs:77673
 501601.342243
 ```
 
-Les valeurs $501601.342243$ correspondent aux valeurs numériques de la dernière valeur de retour de la matrice. Cet affichage oblige juste le compuleur à faire le calcul (sinon il pourrait supprimer l'intégralité du benchmark). Les autres lignes ont le format suivant :
+- Les valeurs correspondent à la dernière valeur calculée et au temps total pour chaque algorithme.
+- Format : `algo:tempsμs:nb_iter`
 
-```txt
-	algo:tempsμs:nb_iter
-```
+---
 
-**algo :** est le nom de la variante utilisée
+## Reproductibilité
 
-**temps :** est le temps *total* de calcul utilisé pour `nb_iter` iterations
+Tout le projet est conçu pour être exécuté sur n'importe quel système (Linux, Windows, Mac) grâce à Docker.  
+Aucune installation manuelle de dépendances Python ou LaTeX n'est nécessaire.
 
-**nb\_iter :** est le nombre de fois où la multiplication a été effectuée. Dans le cas des matrices de petite taille, le nombre d'itération est augmenté afin d'avoir un temps de calcul plus stable.
+---
+
+## Contact
+
+Nathan Fontaine, Hugo Viala, Dardan Bytyqi
