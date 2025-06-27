@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{geometry}
+\usepackage{xurl}
 \geometry{margin=2.5cm}
 
 \title{Impact du cache sur la multiplication de matrices}
@@ -51,10 +52,10 @@ Enfin, la section~4 conclut et propose des perspectives d'amélioration.
 
 \subsection*{Notations}
 \begin{itemize}
-    \item \(N\) : taille des matrices carrées (\(N \times N\))
-    \item \(t\) : temps d'exécution mesuré (en microsecondes)
-    \item \texttt{algo} : nom de l'algorithme utilisé (ijk, jik, kij, etc.)
-    \item FLOPS : nombre d'opérations flottantes par seconde
+    \item \(N\): taille des matrices carrées (\(N \times N\))
+    \item \(t\): temps d'exécution mesuré (en microsecondes)
+    \item \texttt{algo}: nom de l'algorithme utilisé (ijk, jik, kij, etc.)
+    \item FLOPS: nombre d'opérations flottantes par seconde.
 \end{itemize}
 
 \subsection*{Description de la méthode}
@@ -77,16 +78,42 @@ tailles de matrices et collecte les temps d'exécution dans un fichier CSV.
 \section{Résultats et discussion}
 
 \subsection*{Résultats}
-Les résultats sont présentés sous forme de graphiques montrant l'évolution des FLOPS en fonction de la taille \(N\) pour chaque algorithme. On observe des variations de performance selon l'ordre des boucles et des ruptures de pente lorsque la taille des matrices dépasse la capacité du cache.
+Les résultats sont présentés sous forme de graphiques montrant l'évolution des FLOPS en fonction de la taille \(N\) pour chaque algorithme. 
+On observe des variations de performance selon l'ordre des boucles et des ruptures de pente lorsque la taille des matrices dépasse la capacité du cache, 
+ce qui est cohérent avec les analyses classiques de la littérature sur l'optimisation mémoire~\cite{devto}.
+\\
+Pour information, le maximum theorique est calculé comme suit:
+\begin{itemize}
+    \item Fréquence CPU moyenne: \(3\,\mathrm{GHz}\)
+    \item Nombre de coeurs: détecté automatiquement (\texttt{multiprocessing.cpu\_count()})
+    \item Nombre d'opérations flottantes par cycle: 1
+\end{itemize}
+\vspace{0.2cm}
+Le FLOPS maximal théorique est donc:
+\[
+\text{FLOPS}_{\text{max}} = \text{Fréquence CPU} \times \text{Nombre de coeurs} \times \text{Opérations par cycle}
+\]
+Par exemple, pour un CPU de 3\,GHz et 8 coeurs:
+\[
+\text{FLOPS}_{\text{max}} = 3\,000\,000\,000 \times 8 \times 1 = 24\,000\,000\,000
+\]
+Soit \(24\,\mathrm{GFLOPS}\).
+
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.1\textwidth]{../data/resultats_flops_plot.png}
     \caption{Performance réelle (FLOPS) selon \(N\) pour différents algorithmes}
+
 \end{figure}
 
 \subsection*{Discussion}
-L'analyse des résultats montre que certains ordres de boucles exploitent mieux la localité mémoire, ce qui se traduit par de meilleures performances tant que les matrices tiennent dans le cache. Lorsque \(N\) augmente, les performances chutent brutalement, illustrant l'impact du cache. Les différences entre CPU et OS sont également notables, confirmant l'importance de l'architecture matérielle et logicielle.
+L'analyse des résultats montre que certains ordres de boucles exploitent mieux la localité mémoire, 
+ce qui se traduit par de meilleures performances tant que les matrices tiennent dans le cache. Lorsque \(N\) augmente, 
+les performances chutent brutalement, illustrant l'impact du cache. Les différences entre CPU et OS sont également notables, 
+confirmant l'importance de l'architecture matérielle et logicielle. Ces observations rejoignent les conclusions de travaux antérieurs 
+sur l'importance de la localité mémoire et de l'ordre des boucles dans 
+les performances de la multiplication de matrices~\cite{wikics, stackoverflow}.
 
 \section{Conclusion}
 
@@ -97,4 +124,20 @@ influencent fortement les performances via le cache. Pour aller plus loin,
 il serait intéressant de tester d'autres architectures, d'autres tailles de cache, 
 ou d'optimiser encore les algorithmes.
 
+\newpage
+
+\begin{thebibliography}{9}
+
+\bibitem{devto}
+Sergey Podgornyy, Larapulse, \textit{CPU Cache Basics},\\
+\url{https://dev.to/larapulse/cpu-cache-basics-57ej}
+
+\bibitem{wikics}
+Wikipedia, \textit{Cache-oblivious algorithm},\\
+\url{https://en.wikipedia.org/wiki/Cache-oblivious_algorithm}
+
+\bibitem{stackoverflow}
+Stack Overflow, \textit{Why does the order of loops affect performance in matrix multiplication?},\\
+\url{https://stackoverflow.com/questions/3708715/why-does-the-order-of-loops-affect-performance-in-matrix-multiplication}
+\end{thebibliography}
 \end{document}
