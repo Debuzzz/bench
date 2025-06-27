@@ -10,6 +10,7 @@ Ce projet permet de mesurer l'impact du cache sur la multiplication de matrices 
 - `bin/` : dossier des exécutables compilés
 - `data/` : résultats bruts (CSV, images)
 - `notebook.ipynb` : notebook Python pour l'automatisation, l'analyse et la génération des graphiques
+- `notebook.html`: pour voir l'execution du notebook pendant le docker
 - `latex/rapport.tex` : rapport scientifique LaTeX
 - `Dockerfile` : environnement reproductible (Python, Jupyter, LaTeX)
 - `Makefile` : automatisation de toutes les étapes (compilation, exécution, analyse, rapport)

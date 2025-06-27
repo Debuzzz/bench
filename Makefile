@@ -30,5 +30,5 @@ latex:
 clean:
 	rm -rf bin
 	rm -f notebook.html
-	rm -f data/*.csv data/*.png
-	rm -f latex/*.aux latex/*.log latex/*.out latex/*.pdf
+	rm -f latex/*.aux latex/*.log latex/*.out latex/*.pdf latex/*.f*
+	sudo rm -rf data

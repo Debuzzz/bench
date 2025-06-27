@@ -1,8 +1,11 @@
-.venv
+.venv/
+bin/
+data/
+
 .vscode
 prerequis
-bin
-data
 
 rapport.*
 !rapport.tex
+
+notebook.html
